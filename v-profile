@@ -1,8 +1,7 @@
 FROM ubuntu:20.04 AS build
 ENV DEBIAN_FRONTEND=noninteractive
-Broadcast message from root@ip-172-31-26-107 (Tue 2025-06-03 06:37:37 UTC):
 RUN apt install maven git -y
-The system will power off now! -y
+RUN apt install openjdk-17-jdk -y
 RUN git clone https://github.com/imran90306/vprofile-project.git
 WORKDIR /vprofile-project
 RUN mvn package
