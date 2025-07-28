@@ -1,5 +1,6 @@
 FROM ubuntu:20.04 AS build
-ENV DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND=noninteractive  #Prevents Ubuntu from asking for input during package installation (like timezone or yes/no questions).
+# Makes Docker builds smoother (non-interactive).
 RUN apt update -y
 RUN apt install maven git -y
 RUN apt install openjdk-17-jdk -y
