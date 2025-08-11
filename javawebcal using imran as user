@@ -1,0 +1,35 @@
+# ---------- Build Stage ----------
+FROM ubuntu:20.04 AS build
+
+# Avoids prompts during package installs
+ENV DEBIAN_FRONTEND=noninteractive  
+
+RUN apt update -y && \
+    apt install -y maven git openjdk-17-jdk
+
+RUN git clone https://github.com/imran90306/JavaWebCalculator.git
+
+WORKDIR /JavaWebCalculator
+RUN mvn package
+
+
+# ---------- Final Stage ----------
+FROM tomcat:9-jdk17
+
+# Create a non-root user named "imran"
+RUN useradd -m -s /bin/bash imran
+
+# Copy the WAR file from the build stage
+COPY --from=build /JavaWebCalculator/target/*.war /usr/local/tomcat/webapps/
+
+# Set proper permissions so user "imran" can access everything
+RUN chown -R imran:imran /usr/local/tomcat
+
+# Switch to the "imran" user
+USER imran
+
+# Expose the default Tomcat port
+EXPOSE 8080
+
+# Run Tomcat as user "imran"
+CMD ["catalina.sh", "run"]
